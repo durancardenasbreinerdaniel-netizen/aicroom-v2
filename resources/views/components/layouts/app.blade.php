@@ -30,41 +30,75 @@
         'resources/js/app.js',
     ])
 
-    {{-- Estilos necesarios para los componentes Livewire. --}}
     @livewireStyles
-
-    {{--
-        Flux administra la apariencia clara, oscura o basada
-        en la configuración del sistema operativo.
-    --}}
     @fluxAppearance
 </head>
 
 <body class="min-h-screen bg-zinc-50 text-zinc-950 dark:bg-zinc-950 dark:text-white">
     <header class="border-b border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
-        <div class="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
+        <div class="mx-auto flex min-h-16 max-w-6xl flex-wrap items-center justify-between gap-4 px-6 py-3">
             <flux:brand
-                :href="route('home')"
+                href="{{ route('home') }}"
                 name="AICROOM"
             />
 
-            <flux:button
-                href="/admin"
-                variant="ghost"
-                icon="lock-closed"
-            >
-                Administración
-            </flux:button>
+            <nav class="flex flex-wrap items-center gap-2">
+                @guest
+                    <flux:button
+                        href="{{ route('login') }}"
+                        variant="ghost"
+                    >
+                        Iniciar sesión
+                    </flux:button>
+
+                    <flux:button
+                        href="{{ route('register') }}"
+                        variant="primary"
+                    >
+                        Crear cuenta
+                    </flux:button>
+                @endguest
+
+                @auth
+                    <flux:button
+                        href="{{ route('dashboard') }}"
+                        variant="ghost"
+                        icon="home"
+                    >
+                        Mi panel
+                    </flux:button>
+
+                    @can(\App\Enums\PermissionName::ACCESS_ADMIN_PANEL->value)
+                        <flux:button
+                            href="{{ url('/admin') }}"
+                            variant="ghost"
+                            icon="lock-closed"
+                        >
+                            Administración
+                        </flux:button>
+                    @endcan
+
+                    <form
+                        method="POST"
+                        action="{{ route('logout') }}"
+                    >
+                        @csrf
+
+                        <flux:button
+                            type="submit"
+                            variant="ghost"
+                            icon="arrow-right-start-on-rectangle"
+                        >
+                            Cerrar sesión
+                        </flux:button>
+                    </form>
+                @endauth
+            </nav>
         </div>
     </header>
 
-    {{--
-        El contenido de cada página Livewire será insertado
-        dentro de este espacio.
-    --}}
     {{ $slot }}
 
-    {{-- Scripts principales de Livewire y Flux. --}}
     @livewireScripts
     @fluxScripts
 </body>
