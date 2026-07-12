@@ -1,0 +1,45 @@
+/*
+|--------------------------------------------------------------------------
+| Tailwind CSS
+|--------------------------------------------------------------------------
+|
+| Tailwind será utilizado internamente por Flux UI y para ajustes mínimos
+| de distribución. Evitaremos crear grandes cantidades de CSS manual.
+|
+*/
+
+@import 'tailwindcss';
+
+/*
+|--------------------------------------------------------------------------
+| Flux UI
+|--------------------------------------------------------------------------
+|
+| Importa los estilos oficiales de los componentes de Flux.
+|
+*/
+
+@import '../../vendor/livewire/flux/dist/flux.css';
+
+/*
+|--------------------------------------------------------------------------
+| Archivos que Tailwind debe analizar
+|--------------------------------------------------------------------------
+*/
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+/*
+|--------------------------------------------------------------------------
+| Modo oscuro
+|--------------------------------------------------------------------------
+|
+| Flux agregará la clase "dark" al elemento HTML según la preferencia
+| seleccionada por el usuario o configurada en su sistema.
+|
+*/
+
+@custom-variant dark (&:where(.dark, .dark *));
