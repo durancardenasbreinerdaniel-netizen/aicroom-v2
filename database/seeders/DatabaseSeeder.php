@@ -7,12 +7,13 @@ use Illuminate\Database\Seeder;
 class DatabaseSeeder extends Seeder
 {
     /**
-     * Ejecuta los seeders base de AICROOM.
+     * Ejecuta los seeders principales de AICROOM.
      */
     public function run(): void
     {
         $this->call([
             RoleAndPermissionSeeder::class,
+            SkillSeeder::class,
         ]);
     }
 }
