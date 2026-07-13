@@ -6,6 +6,7 @@ use Database\Factories\EvaluationItemFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class EvaluationItem extends Model
 {
@@ -55,7 +56,7 @@ class EvaluationItem extends Model
     public function questionnaireItem(): BelongsTo
     {
         return $this->belongsTo(
-            QuestionnaireItem::class
+            QuestionnaireItem::class,
         );
     }
 
@@ -67,5 +68,13 @@ class EvaluationItem extends Model
         return $this
             ->belongsTo(Skill::class)
             ->withTrashed();
+    }
+
+    /**
+     * Respuesta asociada con esta pregunta.
+     */
+    public function answer(): HasOne
+    {
+        return $this->hasOne(Answer::class);
     }
 }

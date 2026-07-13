@@ -56,18 +56,27 @@ class EvaluationPageAccessTest extends TestCase
             $version->refresh()
         );
 
+        /*
+         * Obtiene la primera pregunta para comprobar que la interfaz
+         * real de la evaluación se renderiza correctamente.
+         */
+        $firstItem = $evaluation
+            ->items()
+            ->orderBy('position')
+            ->firstOrFail();
+
         $this
             ->actingAs($participant)
             ->get(
                 route(
                     'evaluations.show',
-                    $evaluation
-                )
+                    $evaluation,
+                ),
             )
             ->assertOk()
-            ->assertSee(
-                'La evaluación fue preparada correctamente.'
-            );
+            ->assertSee($firstItem->statement)
+            ->assertSee('Selecciona una respuesta')
+            ->assertSee('Pregunta');
     }
 
     public function test_participant_cannot_view_another_evaluation(): void

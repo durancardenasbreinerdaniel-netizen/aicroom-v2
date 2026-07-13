@@ -177,4 +177,43 @@ class Evaluation extends Model
             $this->expires_at
         );
     }
+
+    /**
+     * Respuestas almacenadas en la evaluación.
+     */
+    public function answers(): HasMany
+    {
+        return $this->hasMany(Answer::class);
+    }
+
+    /**
+     * Cantidad de preguntas respondidas.
+     */
+    public function answeredQuestionsCount(): int
+    {
+        return $this->answers()->count();
+    }
+
+    /**
+     * Porcentaje de avance de la evaluación.
+     */
+    public function progressPercentage(): int
+    {
+        if ($this->total_questions === 0) {
+            return 0;
+        }
+
+        return (int) round(
+            ($this->answeredQuestionsCount() / $this->total_questions) * 100,
+        );
+    }
+
+    /**
+     * Indica si todas las preguntas fueron respondidas.
+     */
+    public function isFullyAnswered(): bool
+    {
+        return $this->answeredQuestionsCount()
+            === $this->total_questions;
+    }
 }
