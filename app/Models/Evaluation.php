@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Str;
 
 class Evaluation extends Model
@@ -215,5 +216,15 @@ class Evaluation extends Model
     {
         return $this->answeredQuestionsCount()
             === $this->total_questions;
+    }
+
+    /**
+     * Resultado calculado de la evaluación.
+     */
+    public function result(): HasOne
+    {
+        return $this->hasOne(
+            EvaluationResult::class,
+        );
     }
 }

@@ -38,19 +38,28 @@
                 </flux:button>
             </flux:card>
 
-            <flux:card class="space-y-3">
+            <flux:card class="space-y-4">
                 <flux:icon
                     name="chart-bar"
                     class="size-6"
                 />
-
+                    
                 <flux:heading size="lg">
                     Resultados
                 </flux:heading>
-
+            
                 <flux:text>
-                    Tus resultados aparecerán al completar una evaluación.
+                    Consulta los resultados de las evaluaciones
+                    que hayas finalizado.
                 </flux:text>
+            
+                <flux:button
+                    href="{{ route('results.index') }}"
+                    variant="primary"
+                    icon:trailing="arrow-right"
+                >
+                    Ver resultados
+                </flux:button>
             </flux:card>
 
             <flux:card class="space-y-3">

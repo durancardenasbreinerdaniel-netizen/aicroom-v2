@@ -129,4 +129,14 @@ class Skill extends Model
     {
         $query->where('is_active', true);
     }
+
+    /**
+     * Resultados históricos asociados con la habilidad.
+     */
+    public function evaluationSkillResults(): HasMany
+    {
+        return $this->hasMany(
+            EvaluationSkillResult::class,
+        );
+    }
 }

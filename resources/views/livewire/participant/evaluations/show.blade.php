@@ -64,20 +64,30 @@
                 <flux:callout.heading>
                     Evaluación enviada correctamente
                 </flux:callout.heading>
-
+            
                 <flux:callout.text>
-                    Tus respuestas fueron almacenadas. El cálculo de
-                    resultados será implementado en la siguiente fase.
+                    Tus respuestas fueron procesadas y el resultado
+                    ya se encuentra disponible.
                 </flux:callout.text>
             </flux:callout>
-
-            <flux:button
-                href="{{ route('dashboard') }}"
-                variant="primary"
-                icon="home"
-            >
-                Volver al panel
-            </flux:button>
+        
+            <div class="flex flex-wrap gap-3">
+                <flux:button
+                    href="{{ route('results.show', $evaluation) }}"
+                    variant="primary"
+                    icon="chart-bar"
+                >
+                    Ver resultados
+                </flux:button>
+            
+                <flux:button
+                    href="{{ route('dashboard') }}"
+                    variant="ghost"
+                    icon="home"
+                >
+                    Volver al panel
+                </flux:button>
+            </div>
         @elseif ($evaluation->status === \App\Enums\EvaluationStatus::EXPIRED)
             <flux:callout
                 icon="exclamation-triangle"

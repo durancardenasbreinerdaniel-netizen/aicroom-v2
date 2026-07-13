@@ -7,6 +7,8 @@ use App\Livewire\Pages\Home;
 use App\Livewire\Participant\Dashboard;
 use App\Livewire\Participant\Evaluations\Index as EvaluationIndex;
 use App\Livewire\Participant\Evaluations\Show as EvaluationShow;
+use App\Livewire\Participant\Results\Index as ResultIndex;
+use App\Livewire\Participant\Results\Show as ResultShow;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -51,6 +53,16 @@ Route::middleware('auth')->group(function (): void {
         '/evaluations/{evaluation}',
         EvaluationShow::class
     )->name('evaluations.show');
+
+    Route::get(
+        '/results',
+        ResultIndex::class,
+    )->name('results.index');
+
+    Route::get(
+        '/results/{evaluation}',
+        ResultShow::class,
+    )->name('results.show');
 
     Route::post('/logout', LogoutController::class)
         ->name('logout');

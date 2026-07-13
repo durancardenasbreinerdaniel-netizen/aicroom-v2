@@ -71,6 +71,17 @@ class SubmitEvaluationTest extends TestCase
         $this->assertNotNull(
             $submittedEvaluation->submitted_at,
         );
+
+        $this->assertNotNull(
+            $submittedEvaluation->result,
+        );
+
+        $this->assertDatabaseHas(
+            'evaluation_results',
+            [
+                'evaluation_id' => $evaluation->id,
+            ],
+        );
     }
 
     public function test_incomplete_evaluation_cannot_be_submitted(): void
@@ -148,6 +159,11 @@ class SubmitEvaluationTest extends TestCase
         $this->assertSame(
             EvaluationStatus::SUBMITTED,
             $secondResult->status,
+        );
+
+        $this->assertDatabaseCount(
+            'evaluation_results',
+            1,
         );
     }
 }

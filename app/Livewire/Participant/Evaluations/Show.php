@@ -163,21 +163,25 @@ class Show extends Component
     }
 
     /**
-     * Finaliza la evaluación.
+     * Finaliza la evaluación y abre el resultado.
      */
     public function submitEvaluation(
         SubmitEvaluation $submitEvaluation,
-    ): void {
+    ): mixed {
         $evaluation = $this->getEvaluation();
 
-        $submitEvaluation->execute(
+        $submittedEvaluation = $submitEvaluation->execute(
             participant: auth()->user(),
             evaluation: $evaluation,
         );
 
-        $this->remainingSeconds = 0;
-        $this->answerValue = null;
-        $this->resetErrorBag();
+        return $this->redirectRoute(
+            'results.show',
+            [
+                'evaluation' => $submittedEvaluation,
+            ],
+            navigate: true,
+        );
     }
 
     /**

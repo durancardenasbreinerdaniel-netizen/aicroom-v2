@@ -8,9 +8,17 @@ use App\Models\User;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
+use LogicException;
 
 class SubmitEvaluation
 {
+    /**
+     * Inyecta la acción encargada de calcular el resultado.
+     */
+    public function __construct(
+        private readonly CalculateEvaluationResult $calculateResult,
+    ) {}
+
     /**
      * Finaliza una evaluación completamente respondida.
      */
@@ -18,11 +26,14 @@ class SubmitEvaluation
         User $participant,
         Evaluation $evaluation,
     ): Evaluation {
-        return DB::transaction(
+        $evaluationExpired = false;
+
+        $submittedEvaluation = DB::transaction(
             function () use (
                 $participant,
                 $evaluation,
-            ): Evaluation {
+                &$evaluationExpired,
+            ): ?Evaluation {
                 $lockedEvaluation = Evaluation::query()
                     ->lockForUpdate()
                     ->findOrFail($evaluation->id);
@@ -37,22 +48,44 @@ class SubmitEvaluation
                 }
 
                 /*
-                 * Si ya fue enviada, devuelve el mismo registro.
-                 * Esto mantiene la operación idempotente.
+                 * Si ya fue enviada, mantiene la operación
+                 * idempotente y comprueba que tenga resultado.
                  */
                 if (
                     $lockedEvaluation->status
                     === EvaluationStatus::SUBMITTED
                 ) {
-                    return $lockedEvaluation;
+                    if (
+                        ! $lockedEvaluation
+                            ->result()
+                            ->exists()
+                    ) {
+                        $this->calculateResult->execute(
+                            $lockedEvaluation,
+                        );
+                    }
+
+                    return $lockedEvaluation
+                        ->refresh()
+                        ->load([
+                            'result.skillResults',
+                        ]);
                 }
 
+                /*
+                 * Guarda el cambio a EXPIRED antes de lanzar
+                 * el error fuera de la transacción.
+                 */
                 if ($lockedEvaluation->hasExpired()) {
-                    $lockedEvaluation->markAsExpired();
+                    if ($lockedEvaluation->isInProgress()) {
+                        $lockedEvaluation->forceFill([
+                            'status' => EvaluationStatus::EXPIRED,
+                        ])->save();
+                    }
 
-                    throw ValidationException::withMessages([
-                        'evaluation' => 'El tiempo de la evaluación ha terminado.',
-                    ]);
+                    $evaluationExpired = true;
+
+                    return null;
                 }
 
                 if (
@@ -72,7 +105,8 @@ class SubmitEvaluation
                     $answeredQuestions
                     !== $lockedEvaluation->total_questions
                 ) {
-                    $missingAnswers = $lockedEvaluation->total_questions
+                    $missingAnswers = $lockedEvaluation
+                        ->total_questions
                         - $answeredQuestions;
 
                     throw ValidationException::withMessages([
@@ -85,8 +119,34 @@ class SubmitEvaluation
                     'submitted_at' => now(),
                 ])->save();
 
-                return $lockedEvaluation->refresh();
+                /*
+                 * El resultado se calcula dentro de la misma
+                 * transacción que finaliza la evaluación.
+                 */
+                $this->calculateResult->execute(
+                    $lockedEvaluation->refresh(),
+                );
+
+                return $lockedEvaluation
+                    ->refresh()
+                    ->load([
+                        'result.skillResults',
+                    ]);
             },
         );
+
+        if ($evaluationExpired) {
+            throw ValidationException::withMessages([
+                'evaluation' => 'El tiempo de la evaluación ha terminado.',
+            ]);
+        }
+
+        if (! $submittedEvaluation instanceof Evaluation) {
+            throw new LogicException(
+                'No fue posible finalizar la evaluación.',
+            );
+        }
+
+        return $submittedEvaluation;
     }
 }
