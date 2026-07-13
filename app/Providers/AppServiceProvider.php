@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Models\Question;
 use App\Models\Skill;
+use App\Policies\QuestionPolicy;
 use App\Policies\SkillPolicy;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Gate;
@@ -25,8 +27,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         /*
-         * Activa las validaciones estrictas de Eloquent
-         * fuera del entorno de producción.
+         * Detecta problemas de Eloquent durante el desarrollo.
          */
         Model::shouldBeStrict(
             ! $this->app->isProduction()
@@ -43,11 +44,16 @@ class AppServiceProvider extends ServiceProvider
         );
 
         /*
-         * Registra explícitamente la política de habilidades.
+         * Registra las políticas de los módulos administrativos.
          */
         Gate::policy(
             Skill::class,
             SkillPolicy::class,
+        );
+
+        Gate::policy(
+            Question::class,
+            QuestionPolicy::class,
         );
     }
 }

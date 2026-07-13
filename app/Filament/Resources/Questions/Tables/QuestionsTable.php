@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\Skills\Tables;
+namespace App\Filament\Resources\Questions\Tables;
 
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
@@ -10,45 +10,40 @@ use Filament\Actions\RestoreAction;
 use Filament\Actions\RestoreBulkAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 
-class SkillsTable
+class QuestionsTable
 {
     /**
-     * Configura el listado administrativo de habilidades.
+     * Configura el listado del banco de preguntas.
      */
     public static function configure(Table $table): Table
     {
         return $table
             ->columns([
-                TextColumn::make('code')
-                    ->label('Código')
-                    ->badge()
-                    ->searchable()
-                    ->sortable(),
-
-                TextColumn::make('name')
+                TextColumn::make('skill.name')
                     ->label('Habilidad')
+                    ->badge()
                     ->searchable()
                     ->sortable(),
 
-                TextColumn::make('description')
-                    ->label('Descripción')
-                    ->limit(70)
-                    ->wrap()
-                    ->toggleable(),
+                TextColumn::make('statement')
+                    ->label('Pregunta')
+                    ->searchable()
+                    ->limit(100)
+                    ->wrap(),
 
-                TextColumn::make('questions_count')
-                    ->label('Preguntas')
-                    ->counts('questions')
+                TextColumn::make('weight')
+                    ->label('Peso')
+                    ->badge()
                     ->sortable(),
 
-                TextColumn::make('active_questions_count')
-                    ->label('Preguntas activas')
-                    ->counts('activeQuestions')
-                    ->badge()
+                IconColumn::make('is_reverse_scored')
+                    ->label('Inversa')
+                    ->boolean()
                     ->sortable(),
 
                 IconColumn::make('is_active')
@@ -73,11 +68,26 @@ class SkillsTable
                     ),
             ])
             ->filters([
+                SelectFilter::make('skill_id')
+                    ->label('Habilidad')
+                    ->relationship(
+                        name: 'skill',
+                        titleAttribute: 'name',
+                    )
+                    ->searchable()
+                    ->preload(),
+
                 TernaryFilter::make('is_active')
                     ->label('Estado')
                     ->placeholder('Todas')
                     ->trueLabel('Activas')
                     ->falseLabel('Inactivas'),
+
+                TernaryFilter::make('is_reverse_scored')
+                    ->label('Tipo de puntuación')
+                    ->placeholder('Todas')
+                    ->trueLabel('Inversas')
+                    ->falseLabel('Directas'),
 
                 TrashedFilter::make()
                     ->label('Registros eliminados'),
@@ -96,7 +106,7 @@ class SkillsTable
                     RestoreBulkAction::make(),
                 ]),
             ])
-            ->defaultSort('name')
+            ->defaultSort('created_at', 'desc')
             ->stackedOnMobile();
     }
 }

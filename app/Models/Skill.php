@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
@@ -17,6 +18,12 @@ class Skill extends Model
     use HasFactory;
 
     use SoftDeletes;
+
+    /**
+     * Cantidad mínima de preguntas activas requerida para utilizar
+     * una habilidad dentro de un cuestionario.
+     */
+    public const MINIMUM_ACTIVE_QUESTIONS = 3;
 
     /**
      * Atributos permitidos para asignación masiva.
@@ -44,10 +51,34 @@ class Skill extends Model
     }
 
     /**
-     * Normaliza automáticamente el código.
-     *
-     * Los códigos siempre se almacenarán en mayúsculas
-     * y sin espacios adicionales.
+     * Preguntas asociadas con la habilidad.
+     */
+    public function questions(): HasMany
+    {
+        return $this->hasMany(Question::class);
+    }
+
+    /**
+     * Preguntas activas asociadas con la habilidad.
+     */
+    public function activeQuestions(): HasMany
+    {
+        return $this
+            ->hasMany(Question::class)
+            ->where('is_active', true);
+    }
+
+    /**
+     * Indica si la habilidad tiene suficientes preguntas activas.
+     */
+    public function hasMinimumActiveQuestions(): bool
+    {
+        return $this->activeQuestions()->count()
+            >= self::MINIMUM_ACTIVE_QUESTIONS;
+    }
+
+    /**
+     * Normaliza el código.
      *
      * @return Attribute<string, string>
      */
@@ -61,7 +92,7 @@ class Skill extends Model
     }
 
     /**
-     * Normaliza automáticamente el nombre.
+     * Normaliza el nombre.
      *
      * @return Attribute<string, string>
      */
@@ -91,7 +122,7 @@ class Skill extends Model
     }
 
     /**
-     * Limita una consulta únicamente a habilidades activas.
+     * Limita la consulta a habilidades activas.
      */
     #[Scope]
     protected function active(Builder $query): void
