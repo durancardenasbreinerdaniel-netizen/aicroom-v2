@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
             RoleAndPermissionSeeder::class,
             SkillSeeder::class,
             QuestionSeeder::class,
+            QuestionnaireSeeder::class,
         ]);
     }
 }

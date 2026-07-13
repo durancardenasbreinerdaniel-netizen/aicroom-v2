@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\LikertValue;
 use Database\Factories\QuestionFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -121,5 +122,13 @@ class Question extends Model
     public function maximumWeightedScore(): int
     {
         return LikertValue::maximum() * $this->weight;
+    }
+
+    /**
+     * Ítems de cuestionario que utilizan esta pregunta.
+     */
+    public function questionnaireItems(): HasMany
+    {
+        return $this->hasMany(QuestionnaireItem::class);
     }
 }

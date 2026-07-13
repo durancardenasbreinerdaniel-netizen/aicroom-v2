@@ -23,8 +23,16 @@ enum PermissionName: string
     case DELETE_QUESTION = 'delete question';
     case RESTORE_QUESTION = 'restore question';
 
+    case VIEW_ANY_QUESTIONNAIRE = 'view any questionnaire';
+    case VIEW_QUESTIONNAIRE = 'view questionnaire';
+    case CREATE_QUESTIONNAIRE = 'create questionnaire';
+    case UPDATE_QUESTIONNAIRE = 'update questionnaire';
+    case DELETE_QUESTIONNAIRE = 'delete questionnaire';
+    case RESTORE_QUESTIONNAIRE = 'restore questionnaire';
+    case PUBLISH_QUESTIONNAIRE = 'publish questionnaire';
+
     /**
-     * Devuelve el nombre visible del permiso.
+     * Devuelve la etiqueta visible del permiso.
      */
     public function label(): string
     {
@@ -44,6 +52,14 @@ enum PermissionName: string
             self::UPDATE_QUESTION => 'Editar preguntas',
             self::DELETE_QUESTION => 'Eliminar preguntas',
             self::RESTORE_QUESTION => 'Restaurar preguntas',
+
+            self::VIEW_ANY_QUESTIONNAIRE => 'Consultar cuestionarios',
+            self::VIEW_QUESTIONNAIRE => 'Consultar un cuestionario',
+            self::CREATE_QUESTIONNAIRE => 'Crear cuestionarios',
+            self::UPDATE_QUESTIONNAIRE => 'Editar cuestionarios',
+            self::DELETE_QUESTIONNAIRE => 'Eliminar cuestionarios',
+            self::RESTORE_QUESTIONNAIRE => 'Restaurar cuestionarios',
+            self::PUBLISH_QUESTIONNAIRE => 'Publicar cuestionarios',
         };
     }
 }

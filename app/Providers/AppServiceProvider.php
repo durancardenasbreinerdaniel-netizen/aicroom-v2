@@ -3,7 +3,11 @@
 namespace App\Providers;
 
 use App\Models\Question;
+use App\Models\Questionnaire;
+use App\Models\QuestionnaireVersion;
 use App\Models\Skill;
+use App\Policies\QuestionnairePolicy;
+use App\Policies\QuestionnaireVersionPolicy;
 use App\Policies\QuestionPolicy;
 use App\Policies\SkillPolicy;
 use Illuminate\Database\Eloquent\Model;
@@ -14,7 +18,7 @@ use Illuminate\Validation\Rules\Password;
 class AppServiceProvider extends ServiceProvider
 {
     /**
-     * Registra servicios en el contenedor.
+     * Registra servicios.
      */
     public function register(): void
     {
@@ -26,16 +30,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        /*
-         * Detecta problemas de Eloquent durante el desarrollo.
-         */
         Model::shouldBeStrict(
             ! $this->app->isProduction()
         );
 
-        /*
-         * Política global de contraseñas.
-         */
         Password::defaults(
             fn (): Password => Password::min(8)
                 ->letters()
@@ -43,9 +41,6 @@ class AppServiceProvider extends ServiceProvider
                 ->numbers()
         );
 
-        /*
-         * Registra las políticas de los módulos administrativos.
-         */
         Gate::policy(
             Skill::class,
             SkillPolicy::class,
@@ -54,6 +49,16 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(
             Question::class,
             QuestionPolicy::class,
+        );
+
+        Gate::policy(
+            Questionnaire::class,
+            QuestionnairePolicy::class,
+        );
+
+        Gate::policy(
+            QuestionnaireVersion::class,
+            QuestionnaireVersionPolicy::class,
         );
     }
 }
