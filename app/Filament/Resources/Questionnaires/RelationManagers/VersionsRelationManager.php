@@ -4,7 +4,6 @@ namespace App\Filament\Resources\Questionnaires\RelationManagers;
 
 use App\Actions\Questionnaires\PublishQuestionnaireVersion;
 use App\Enums\QuestionnaireVersionStatus;
-use App\Models\Question;
 use App\Models\QuestionnaireVersion;
 use Filament\Actions\Action;
 use Filament\Actions\CreateAction;
@@ -81,23 +80,22 @@ class VersionsRelationManager extends RelationManager
                                     ->relationship(
                                         name: 'question',
                                         titleAttribute: 'statement',
-                                        modifyQueryUsing:
-                                            fn (Builder $query): Builder => $query
-                                                ->whereNull('deleted_at')
-                                                ->where(
-                                                    'is_active',
-                                                    true
-                                                )
-                                                ->whereHas(
-                                                    'skill',
-                                                    fn (Builder $skillQuery): Builder => $skillQuery
-                                                        ->whereNull('deleted_at')
-                                                        ->where(
-                                                            'is_active',
-                                                            true
-                                                        )
-                                                )
-                                                ->orderBy('statement'),
+                                        modifyQueryUsing: fn (Builder $query): Builder => $query
+                                            ->whereNull('deleted_at')
+                                            ->where(
+                                                'is_active',
+                                                true
+                                            )
+                                            ->whereHas(
+                                                'skill',
+                                                fn (Builder $skillQuery): Builder => $skillQuery
+                                                    ->whereNull('deleted_at')
+                                                    ->where(
+                                                        'is_active',
+                                                        true
+                                                    )
+                                            )
+                                            ->orderBy('statement'),
                                     )
                                     ->searchable()
                                     ->preload()

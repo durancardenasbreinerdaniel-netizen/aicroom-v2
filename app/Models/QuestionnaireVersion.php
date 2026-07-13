@@ -148,4 +148,12 @@ class QuestionnaireVersion extends Model
         return $this->status
             === QuestionnaireVersionStatus::RETIRED;
     }
+
+    /**
+     * Evaluaciones creadas desde esta versión.
+     */
+    public function evaluations(): HasMany
+    {
+        return $this->hasMany(Evaluation::class);
+    }
 }

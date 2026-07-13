@@ -8,6 +8,7 @@ use Database\Factories\UserFactory;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
@@ -98,5 +99,13 @@ class User extends Authenticatable implements FilamentUser
     {
         return $this->canAuthenticate()
             && $this->can(PermissionName::ACCESS_ADMIN_PANEL->value);
+    }
+
+    /**
+     * Evaluaciones realizadas por el usuario.
+     */
+    public function evaluations(): HasMany
+    {
+        return $this->hasMany(Evaluation::class);
     }
 }

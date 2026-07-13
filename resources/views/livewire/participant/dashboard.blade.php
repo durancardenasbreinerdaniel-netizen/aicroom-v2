@@ -9,13 +9,13 @@
             </flux:heading>
 
             <flux:text size="lg">
-                Este será tu espacio para realizar evaluaciones y consultar
-                tu progreso.
+                Este es tu espacio para realizar evaluaciones
+                y consultar tu progreso.
             </flux:text>
         </div>
 
         <div class="grid gap-5 md:grid-cols-3">
-            <flux:card class="space-y-3">
+            <flux:card class="space-y-4">
                 <flux:icon
                     name="clipboard-document-check"
                     class="size-6"
@@ -26,8 +26,16 @@
                 </flux:heading>
 
                 <flux:text>
-                    Todavía no has realizado evaluaciones.
+                    Inicia una evaluación de habilidades blandas.
                 </flux:text>
+
+                <flux:button
+                    href="{{ route('evaluations.index') }}"
+                    variant="primary"
+                    icon:trailing="arrow-right"
+                >
+                    Ver evaluaciones
+                </flux:button>
             </flux:card>
 
             <flux:card class="space-y-3">
@@ -41,7 +49,7 @@
                 </flux:heading>
 
                 <flux:text>
-                    Tus resultados aparecerán aquí al completar una evaluación.
+                    Tus resultados aparecerán al completar una evaluación.
                 </flux:text>
             </flux:card>
 
@@ -56,23 +64,9 @@
                 </flux:heading>
 
                 <flux:text>
-                    Podrás comparar tus evaluaciones futuras.
+                    Podrás comparar tus futuras evaluaciones.
                 </flux:text>
             </flux:card>
         </div>
-
-        <flux:callout
-            icon="information-circle"
-            variant="secondary"
-        >
-            <flux:callout.heading>
-                Cuenta de participante activa
-            </flux:callout.heading>
-
-            <flux:callout.text>
-                Tu cuenta fue configurada correctamente. El módulo de
-                evaluaciones será implementado en una fase posterior.
-            </flux:callout.text>
-        </flux:callout>
     </div>
 </main>

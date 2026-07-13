@@ -10,6 +10,7 @@ use App\Filament\Resources\Questionnaires\Schemas\QuestionnaireForm;
 use App\Filament\Resources\Questionnaires\Tables\QuestionnairesTable;
 use App\Models\Questionnaire;
 use BackedEnum;
+use Filament\Resources\Pages\PageRegistration;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables\Table;
@@ -74,7 +75,7 @@ class QuestionnaireResource extends Resource
     /**
      * Registra las páginas.
      *
-     * @return array<string, \Filament\Resources\Pages\PageRegistration>
+     * @return array<string, PageRegistration>
      */
     public static function getPages(): array
     {

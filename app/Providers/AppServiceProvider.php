@@ -2,10 +2,12 @@
 
 namespace App\Providers;
 
+use App\Models\Evaluation;
 use App\Models\Question;
 use App\Models\Questionnaire;
 use App\Models\QuestionnaireVersion;
 use App\Models\Skill;
+use App\Policies\EvaluationPolicy;
 use App\Policies\QuestionnairePolicy;
 use App\Policies\QuestionnaireVersionPolicy;
 use App\Policies\QuestionPolicy;
@@ -59,6 +61,11 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(
             QuestionnaireVersion::class,
             QuestionnaireVersionPolicy::class,
+        );
+
+        Gate::policy(
+            Evaluation::class,
+            EvaluationPolicy::class,
         );
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Questionnaires\Pages;
 
 use App\Filament\Resources\Questionnaires\QuestionnaireResource;
+use Filament\Actions\Action;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\RestoreAction;
 use Filament\Resources\Pages\EditRecord;
@@ -15,7 +16,7 @@ class EditQuestionnaire extends EditRecord
     /**
      * Acciones disponibles.
      *
-     * @return array<int, \Filament\Actions\Action>
+     * @return array<int, Action>
      */
     protected function getHeaderActions(): array
     {
